@@ -28,18 +28,19 @@ func (infra *Service) CreateAPIService() error {
 		DB:     infra.DB,
 		Redis:  infra.Redis,
 	})
+	utilHandlerAPI := module.UtilHandlerAPI()
 	userHandlerAPI := module.UserHandlerAPI()
 
-	r.Route("/v1", func(r chi.Router) {
-		r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("pong !"))
-		})
-		r.Route("/user", func(r chi.Router) {
-			r.Post("/", userHandlerAPI.Create)
-			r.Put("/{id}", userHandlerAPI.Update)
-			r.Get("/{id}", userHandlerAPI.GetProfile)
-			r.Post("/list", userHandlerAPI.List)
-			r.Delete("/{id}", userHandlerAPI.Delete)
+	r.Route("/", func(r chi.Router) {
+		r.Get("/health", utilHandlerAPI.GetHealthStatus)
+		r.Route("/v1", func(r chi.Router) {
+			r.Route("/user", func(r chi.Router) {
+				r.Post("/list", userHandlerAPI.List)
+				r.Get("/{id}", userHandlerAPI.GetDetail)
+				r.Post("/", userHandlerAPI.Create)
+				r.Put("/{id}", userHandlerAPI.Update)
+				r.Delete("/{id}", userHandlerAPI.Delete)
+			})
 		})
 	})
 
@@ -49,7 +50,7 @@ func (infra *Service) CreateAPIService() error {
 	}
 	serverErr := make(chan error, 1)
 	go func() {
-		infra.Logger.Infof("User API serving at %s", server.Addr)
+		infra.Logger.Infof("API Service serving at %s", server.Addr)
 		serverErr <- server.ListenAndServe()
 	}()
 

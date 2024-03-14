@@ -9,10 +9,10 @@ import (
 	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
-func (s *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
+func (s *UserHandler) GetDetail(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	request := userContract.GetProfileRequest{
+	request := userContract.GetDetailUserRequest{
 		ID: chi.URLParam(r, "id"),
 	}
 	err := utils.ValidateStruct(request)
@@ -22,7 +22,7 @@ func (s *UserHandler) GetProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := s.userUseCase.GetProfile(ctx, request)
+	resp, err := s.userUseCase.GetDetail(ctx, request)
 	if err != nil {
 		s.logger.InfoWithContext(ctx, utils.ERROR_HANDLER_STAGE, err.Error())
 		res.Nay(w, r, err)

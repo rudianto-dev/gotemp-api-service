@@ -6,8 +6,8 @@ import (
 	userContract "github.com/rudianto-dev/gotemp-sdk/contract/user"
 )
 
-func (s *UserUseCase) GetList(ctx context.Context, req userContract.GetListRequest) (*userContract.GetListResponse, error) {
-	response := userContract.GetListResponse{}
+func (s *UserUseCase) GetList(ctx context.Context, req userContract.GetListUserRequest) (*userContract.GetListUserResponse, error) {
+	response := userContract.GetListUserResponse{}
 	users, err := s.userRepo.GetList(ctx)
 	if err != nil {
 		return &response, err

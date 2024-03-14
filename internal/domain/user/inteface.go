@@ -17,15 +17,15 @@ type IRepository interface {
 }
 
 type IUseCase interface {
-	GetProfile(ctx context.Context, req userContract.GetProfileRequest) (*userContract.GetProfileResponse, error)
-	GetList(ctx context.Context, req userContract.GetListRequest) (*userContract.GetListResponse, error)
+	GetDetail(ctx context.Context, req userContract.GetDetailUserRequest) (*userContract.GetDetailUserResponse, error)
+	GetList(ctx context.Context, req userContract.GetListUserRequest) (*userContract.GetListUserResponse, error)
 	CreateUser(ctx context.Context, req userContract.CreateUserRequest) (*userContract.CreateUserResponse, error)
 	UpdateUser(ctx context.Context, req userContract.UpdateUserRequest) (*userContract.UpdateUserResponse, error)
 	DeleteUser(ctx context.Context, req userContract.DeleteUserRequest) (*userContract.DeleteUserResponse, error)
 }
 
 type IHandlerAPI interface {
-	GetProfile(w http.ResponseWriter, r *http.Request)
+	GetDetail(w http.ResponseWriter, r *http.Request)
 	List(w http.ResponseWriter, r *http.Request)
 	Create(w http.ResponseWriter, r *http.Request)
 	Update(w http.ResponseWriter, r *http.Request)

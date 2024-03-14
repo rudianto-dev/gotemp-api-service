@@ -1,2 +1,6 @@
 # Dependency directories (remove the comment below to include it)
 vendor/
+
+# Configuration File
+*.env
+*service.config.json

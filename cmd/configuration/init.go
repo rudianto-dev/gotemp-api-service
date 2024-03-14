@@ -3,7 +3,7 @@ package configuration
 import (
 	"log"
 
-	"github.com/spf13/viper"
+	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
 type ConfigurationSchema struct {
@@ -37,15 +37,17 @@ type Graceful struct {
 }
 
 func NewConfiguration() *ConfigurationSchema {
-	v := viper.New()
-	v.SetConfigFile("/home/rats/project/go-template/gotemp-api-service/sample.config.json")
-
-	config := ConfigurationSchema{}
-	err := v.ReadInConfig()
+	c, err := utils.LoadConfiguration()
 	if err != nil {
 		log.Panic(err)
 	}
-	err = v.UnmarshalExact(&config)
+
+	config := ConfigurationSchema{}
+	err = c.ReadInConfig()
+	if err != nil {
+		log.Panic(err)
+	}
+	err = c.UnmarshalExact(&config)
 	if err != nil {
 		log.Panic(err)
 	}

@@ -12,7 +12,7 @@ import (
 func (s *UserHandler) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	request := userContract.GetListRequest{}
+	request := userContract.GetListUserRequest{}
 	if err := render.Decode(r, &request); err != nil {
 		s.logger.ErrorWithContext(ctx, utils.ERROR_HANDLER_STAGE, err.Error())
 		res.Nay(w, r, err)
