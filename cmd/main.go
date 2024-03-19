@@ -16,8 +16,8 @@ func main() {
 	cmd.AddCommand(&cobra.Command{
 		Use:   "serve",
 		Short: "Run API Service",
-		RunE: func(*cobra.Command, []string) error {
-			return infrastructure.CreateAPIService()
+		Run: func(*cobra.Command, []string) {
+			infrastructure.RunAPI()
 		},
 	})
 

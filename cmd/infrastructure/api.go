@@ -9,51 +9,59 @@ import (
 	"github.com/rudianto-dev/gotemp-sdk/pkg/middleware"
 )
 
-func (infra *Service) CreateAPIService() error {
-	r := chi.NewRouter()
-	r.Use(
+func (srv *Service) RunAPI() {
+	router := srv.SetupAPI()
+	
+	walkFunc := func(method string, route string, handler http.Handler, middlewares ...func(http.Handler) http.Handler) error {
+		srv.Logger.Infof("%s %s", method, route)
+		return nil
+	}
+
+	if err := chi.Walk(router, walkFunc); err != nil {
+		srv.Logger.Fatal(err)
+	}
+
+	server := &http.Server{Addr: srv.Config.Host.Address, Handler: router}
+	srv.Logger.Infof("API GW serving at %s", server.Addr)
+	go func() {
+		if err := server.ListenAndServe(); err != nil {
+			srv.Logger.Error(err)
+		}
+	}()
+	srv.StopGracefully(server)
+}
+
+func (srv *Service) SetupAPI() *chi.Mux {
+	module := module.NewModule(&module.Service{
+		Config: srv.Config,
+		Logger: srv.Logger,
+		DB:     srv.DB,
+		Redis:  srv.Redis,
+	})
+	utilHandlerAPI := module.UtilHandlerAPI()
+	userHandlerAPI := module.UserHandlerAPI()
+
+	router := chi.NewRouter()
+	router.Use(
 		chim.NoCache,
 		chim.RedirectSlashes,
 		chim.RequestID,
 		chim.Recoverer,
 		chim.RealIP,
 		chim.Heartbeat("/ping"),
-		middleware.RequestLogger(infra.Config.NewLogrus()),
+		middleware.RequestLogger(srv.Config.NewLogrus()),
 	)
-
-	// load module
-	module := module.NewModule(&module.Service{
-		Config: infra.Config,
-		Logger: infra.Logger,
-		DB:     infra.DB,
-		Redis:  infra.Redis,
-	})
-	utilHandlerAPI := module.UtilHandlerAPI()
-	userHandlerAPI := module.UserHandlerAPI()
-
-	r.Route("/", func(r chi.Router) {
-		r.Get("/health", utilHandlerAPI.GetHealthStatus)
-		r.Route("/v1", func(r chi.Router) {
-			r.Route("/user", func(r chi.Router) {
-				r.Post("/list", userHandlerAPI.List)
-				r.Get("/{id}", userHandlerAPI.GetDetail)
-				r.Post("/", userHandlerAPI.Create)
-				r.Put("/{id}", userHandlerAPI.Update)
-				r.Delete("/{id}", userHandlerAPI.Delete)
+	router.Route("/", func(r chi.Router) {
+		router.Get("/health", utilHandlerAPI.GetHealthStatus)
+		router.Route("/v1", func(r chi.Router) {
+			router.Route("/user", func(r chi.Router) {
+				router.Post("/list", userHandlerAPI.List)
+				router.Get("/{id}", userHandlerAPI.GetDetail)
+				router.Post("/", userHandlerAPI.Create)
+				router.Put("/{id}", userHandlerAPI.Update)
+				router.Delete("/{id}", userHandlerAPI.Delete)
 			})
 		})
 	})
-
-	server := http.Server{
-		Addr:    infra.Config.Host.Address,
-		Handler: r,
-	}
-	serverErr := make(chan error, 1)
-	go func() {
-		infra.Logger.Infof("API Service serving at %s", server.Addr)
-		serverErr <- server.ListenAndServe()
-	}()
-
-	infra.StopGracefully(&server, serverErr)
-	return nil
+	return router
 }

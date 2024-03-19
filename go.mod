@@ -8,7 +8,7 @@ require (
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/pressly/goose/v3 v3.19.2
-	github.com/rudianto-dev/gotemp-sdk v0.0.3
+	github.com/rudianto-dev/gotemp-sdk v0.0.4
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
 )
