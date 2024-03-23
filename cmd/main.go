@@ -10,11 +10,11 @@ import (
 
 func main() {
 	cmd := cobra.Command{Use: "boilerplate", Short: "Go Boilerplate"}
-	configuration := configuration.NewConfiguration()
-	infrastructure := infrastructure.NewInfrastructure(configuration)
+	configuration := configuration.New()
+	infrastructure := infrastructure.New(configuration)
 
 	cmd.AddCommand(&cobra.Command{
-		Use:   "serve",
+		Use:   "api",
 		Short: "Run API Service",
 		Run: func(*cobra.Command, []string) {
 			infrastructure.RunAPI()

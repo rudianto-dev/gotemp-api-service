@@ -1,9 +1,9 @@
-package user
+package model
 
 import (
 	"time"
 
-	userContract "github.com/rudianto-dev/gotemp-sdk/contract/user"
+	userType "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/model/type"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
@@ -11,11 +11,12 @@ import (
 type User struct {
 	ID        string
 	Name      string
+	Status    userType.Status
 	CreatedAt int64
 	UpdatedAt int64
 }
 
-func NewUser(req userContract.CreateUser) (domain *User, err error) {
+func New(req userType.Create) (domain *User, err error) {
 	time := time.Now().Unix()
 	domain = &User{
 		ID:        utils.GenerateUUID(),
@@ -26,7 +27,7 @@ func NewUser(req userContract.CreateUser) (domain *User, err error) {
 	return
 }
 
-func UpdateUser(req userContract.EditUser) (domain *User, err error) {
+func Update(req userType.Edit) (domain *User, err error) {
 	time := time.Now().Unix()
 	if req.ID == "" {
 		err = utils.ErrBadRequest

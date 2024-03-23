@@ -1,7 +1,7 @@
 package user
 
 import (
-	userDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/user"
+	userInterface "github.com/rudianto-dev/gotemp-api-service/internal/domain/user"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/database"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/logger"
 )
@@ -12,10 +12,13 @@ type UserRepository struct {
 }
 
 const (
-	sqlUserTable = "users"
+	sqlUserTable               = "users"
+	sqlUserPhoneNumberTable    = "user_phone_numbers"
+	sqlUserEmailTable          = "user_emails"
+	sqlUserDeviceInstanceTable = "user_device_instances"
 )
 
-func NewUserRepository(logger *logger.Logger, db *database.DB) (userDomain.IRepository, error) {
+func NewUserRepository(logger *logger.Logger, db *database.DB) (userInterface.Repository, error) {
 	userRP := &UserRepository{
 		logger: logger,
 		db:     db,

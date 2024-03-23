@@ -3,15 +3,15 @@ package module
 import (
 	"github.com/go-redis/redis"
 	"github.com/rudianto-dev/gotemp-api-service/cmd/configuration"
-	userDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/user"
-	userRepo "github.com/rudianto-dev/gotemp-api-service/internal/repository/user"
+	userInterface "github.com/rudianto-dev/gotemp-api-service/internal/domain/user"
+	userRepository "github.com/rudianto-dev/gotemp-api-service/internal/repository/user"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/database"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/logger"
 )
 
 type Module struct {
-	infra    *Service
-	userRepo userDomain.IRepository
+	Infra          *Service
+	UserRepository userInterface.Repository
 }
 
 type Service struct {
@@ -22,14 +22,14 @@ type Service struct {
 }
 
 func NewModule(infra *Service) *Module {
-	userRepo, err := userRepo.NewUserRepository(infra.Logger, infra.DB)
+	userRepository, err := userRepository.NewUserRepository(infra.Logger, infra.DB)
 	if err != nil {
 		infra.Logger.Panicf("error init user repository, %v", err)
 	}
 
 	module := &Module{
-		infra:    infra,
-		userRepo: userRepo,
+		Infra:          infra,
+		UserRepository: userRepository,
 	}
 	return module
 }

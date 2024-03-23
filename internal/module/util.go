@@ -1,10 +1,16 @@
 package module
 
 import (
-	utilDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/util"
+	"github.com/go-chi/chi"
 	utilHandler "github.com/rudianto-dev/gotemp-api-service/internal/handler/api/util"
 )
 
-func (m *Module) UtilHandlerAPI() utilDomain.IHandlerAPI {
-	return utilHandler.NewHandler(m.infra.Logger)
+func (m *Module) UtilRouting() *chi.Mux {
+	handler := utilHandler.NewHandler(m.Infra.Logger)
+
+	router := chi.NewRouter()
+	router.Group(func(r chi.Router) {
+		router.Post("/health", handler.GetHealthStatus)
+	})
+	return router
 }

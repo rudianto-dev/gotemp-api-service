@@ -15,12 +15,17 @@ func upCreateUserTable(ctx context.Context, tx *sql.Tx) error {
 	_, err := tx.Exec(`
 		CREATE TABLE IF NOT EXISTS users
 		(
-			id CHARACTER VARYING(255) NOT NULL,
-			name CHARACTER VARYING(255) NOT NULL,
+			id VARCHAR (100) NOT NULL,
+			name VARCHAR (255) NOT NULL,
+			username VARCHAR (100) NOT NULL,
+			password VARCHAR (100) NOT NULL DEFAULT '',
+			status SMALLINT NOT NULL DEFAULT 0,
 			created_at BIGINT NOT NULL DEFAULT 0,
 			updated_at BIGINT NOT NULL DEFAULT 0,
+			deleted_at BIGINT NOT NULL DEFAULT 0,
 
-			PRIMARY KEY (id)
+			PRIMARY KEY (id),
+			UNIQUE (username)
 		);
 	`)
 	if err != nil {

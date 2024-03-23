@@ -4,15 +4,15 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	userContract "github.com/rudianto-dev/gotemp-sdk/contract/user"
+	userContract "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/contract"
 	res "github.com/rudianto-dev/gotemp-sdk/pkg/response"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
-func (s *UserHandler) GetDetail(w http.ResponseWriter, r *http.Request) {
+func (s *UserHandler) Detail(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	request := userContract.GetDetailUserRequest{
+	request := userContract.DetailRequest{
 		ID: chi.URLParam(r, "id"),
 	}
 	err := utils.ValidateStruct(request)
@@ -22,7 +22,7 @@ func (s *UserHandler) GetDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := s.userUseCase.GetDetail(ctx, request)
+	resp, err := s.userUseCase.Detail(ctx, request)
 	if err != nil {
 		s.logger.InfoWithContext(ctx, utils.ERROR_HANDLER_STAGE, err.Error())
 		res.Nay(w, r, err)

@@ -15,7 +15,7 @@ type Service struct {
 	Redis  *redis.Client
 }
 
-func NewInfrastructure(cf *configuration.ConfigurationSchema) *Service {
+func New(cf *configuration.ConfigurationSchema) *Service {
 	// setup logger
 	logger := logger.NewLogger(cf.NewLogrus())
 	// setup database

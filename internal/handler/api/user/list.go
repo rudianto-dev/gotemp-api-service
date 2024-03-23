@@ -3,17 +3,20 @@ package user
 import (
 	"net/http"
 
-	"github.com/go-chi/chi"
-	userContract "github.com/rudianto-dev/gotemp-sdk/contract/user"
+	"github.com/go-chi/render"
+	userContract "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/contract"
 	res "github.com/rudianto-dev/gotemp-sdk/pkg/response"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
-func (s *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
+func (s *UserHandler) List(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	request := userContract.DeleteUserRequest{
-		ID: chi.URLParam(r, "id"),
+	request := userContract.ListRequest{}
+	if err := render.Decode(r, &request); err != nil {
+		s.logger.ErrorWithContext(ctx, utils.ERROR_HANDLER_STAGE, err.Error())
+		res.Nay(w, r, err)
+		return
 	}
 	err := utils.ValidateStruct(request)
 	if err != nil {
@@ -22,7 +25,7 @@ func (s *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := s.userUseCase.DeleteUser(ctx, request)
+	resp, err := s.userUseCase.List(ctx, request)
 	if err != nil {
 		s.logger.InfoWithContext(ctx, utils.ERROR_HANDLER_STAGE, err.Error())
 		res.Nay(w, r, err)

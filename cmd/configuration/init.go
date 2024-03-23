@@ -36,7 +36,7 @@ type Graceful struct {
 	TimeoutInSecond int64 `json:"timeout_in_second" mapstructure:"timeout_in_second"`
 }
 
-func NewConfiguration() *ConfigurationSchema {
+func New() *ConfigurationSchema {
 	c, err := utils.LoadConfiguration()
 	if err != nil {
 		log.Panic(err)
