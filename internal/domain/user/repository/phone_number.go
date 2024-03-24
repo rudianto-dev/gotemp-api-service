@@ -4,39 +4,39 @@ import (
 	userDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/model"
 )
 
-type CIFEntity struct {
+type PhoneNumberEntity struct {
 	ID          string `json:"id" db:"id"`
 	UserID      string `json:"user_id" db:"user_id"`
-	ReferenceID string `json:"reference_id" db:"reference_id"`
+	PhoneNumber string `json:"phone_number" db:"phone_number"`
 	CreatedAt   int64  `json:"created_at" db:"created_at"`
 	UpdatedAt   int64  `json:"updated_at" db:"updated_at"`
 }
 
-func ToCIFEntity(domain *userDomain.CIF) *CIFEntity {
-	user := &CIFEntity{
+func ToPhoneNumberEntity(domain *userDomain.PhoneNumber) *PhoneNumberEntity {
+	user := &PhoneNumberEntity{
 		ID:          domain.ID,
 		UserID:      domain.UserID,
-		ReferenceID: domain.ReferenceID,
+		PhoneNumber: domain.PhoneNumber,
 		CreatedAt:   domain.CreatedAt,
 		UpdatedAt:   domain.UpdatedAt,
 	}
 	return user
 }
 
-func ToCIFDomain(entity *CIFEntity) *userDomain.CIF {
-	return &userDomain.CIF{
+func ToPhoneNumberDomain(entity *PhoneNumberEntity) *userDomain.PhoneNumber {
+	return &userDomain.PhoneNumber{
 		ID:          entity.ID,
 		UserID:      entity.UserID,
-		ReferenceID: entity.ReferenceID,
+		PhoneNumber: entity.PhoneNumber,
 		CreatedAt:   entity.CreatedAt,
 		UpdatedAt:   entity.UpdatedAt,
 	}
 }
 
-func ToCIFDomains(entities []*CIFEntity) []*userDomain.CIF {
-	domains := []*userDomain.CIF{}
+func ToPhoneNumberDomains(entities []*PhoneNumberEntity) []*userDomain.PhoneNumber {
+	domains := []*userDomain.PhoneNumber{}
 	for _, entity := range entities {
-		domains = append(domains, ToCIFDomain(entity))
+		domains = append(domains, ToPhoneNumberDomain(entity))
 	}
 	return domains
 }

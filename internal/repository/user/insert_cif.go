@@ -9,7 +9,7 @@ import (
 	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
-func (s *UserRepository) InsertCIF(ctx context.Context, tx *sqlx.Tx, userCIFEntity *userRepository.UserCIFEntity) (err error) {
+func (s *UserRepository) InsertCIF(ctx context.Context, tx *sqlx.Tx, userCIFEntity *userRepository.CIFEntity) (err error) {
 	sqlCommand := `
 		INSERT INTO %s (id, user_id, reference_id, created_at, updated_at)
 		VALUES (:id, :user_id, :reference_id, :created_at, :updated_at)

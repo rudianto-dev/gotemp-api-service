@@ -20,14 +20,15 @@ func (s *UserUseCase) Onboarding(ctx context.Context, req userContract.Onboardin
 	}
 	if userCIF == nil {
 		var (
-			userEntity    *userRepository.UserEntity
-			userCIFEntity *userRepository.UserCIFEntity
+			userEntity        *userRepository.UserEntity
+			userCIFEntity     *userRepository.CIFEntity
+			phoneNumberEntity *userRepository.PhoneNumberEntity
 		)
-		userEntity, userCIFEntity, err = s.buildRegisterUserOwner(ctx, req.CIF.PhoneNumber, req.CIF.ID)
+		userEntity, userCIFEntity, phoneNumberEntity, err = s.buildRegisterUserOwner(ctx, req.CIF.PhoneNumber, req.CIF.ID)
 		if err != nil {
 			return
 		}
-		err = s.RegisterUserOwner(ctx, userEntity, userCIFEntity)
+		err = s.RegisterUserOwner(ctx, userEntity, userCIFEntity, phoneNumberEntity)
 		if err != nil {
 			return
 		}
@@ -38,13 +39,16 @@ func (s *UserUseCase) Onboarding(ctx context.Context, req userContract.Onboardin
 	return
 }
 
-func (s *UserUseCase) buildRegisterUserOwner(ctx context.Context, username, referenceID string) (userEntity *userRepository.UserEntity, userCIFEntity *userRepository.UserCIFEntity, err error) {
+func (s *UserUseCase) buildRegisterUserOwner(ctx context.Context, phoneNumber, referenceID string) (
+	userEntity *userRepository.UserEntity, cifEntity *userRepository.CIFEntity, phoneNumberEntity *userRepository.PhoneNumberEntity, err error) {
+
 	var (
-		newUser, user *userDomain.User
-		newAuth       *authDomain.Auth
-		newCif        *userDomain.CIF
+		newUser, user  *userDomain.User
+		newAuth        *authDomain.Auth
+		newCif         *userDomain.CIF
+		newPhoneNumber *userDomain.PhoneNumber
 	)
-	user, err = s.userRepo.GetByUsername(ctx, username)
+	user, err = s.userRepo.GetByUsername(ctx, phoneNumber)
 	if err != nil && err != utils.ErrNotFound {
 		return
 	}
@@ -54,13 +58,13 @@ func (s *UserUseCase) buildRegisterUserOwner(ctx context.Context, username, refe
 	}
 
 	newUser, err = userDomain.New(userType.Create{
-		Name:   username,
+		Name:   phoneNumber,
 		Status: userType.USER_STATUS_PREREGISTERED,
 	})
 	if err != nil {
 		return
 	}
-	newAuth, err = authDomain.New(authType.Credential{Username: username})
+	newAuth, err = authDomain.New(authType.Credential{Username: phoneNumber})
 	if err != nil {
 		return
 	}
@@ -71,12 +75,22 @@ func (s *UserUseCase) buildRegisterUserOwner(ctx context.Context, username, refe
 	if err != nil {
 		return
 	}
+	newPhoneNumber, err = userDomain.NewPhoneNumber(userType.CreatePhoneNumber{
+		UserID:      newUser.ID,
+		PhoneNumber: phoneNumber,
+	})
+	if err != nil {
+		return
+	}
 	userEntity = userRepository.ToUserEntity(newUser, newAuth)
-	userCIFEntity = userRepository.ToUserCIFEntity(newCif)
+	cifEntity = userRepository.ToCIFEntity(newCif)
+	phoneNumberEntity = userRepository.ToPhoneNumberEntity(newPhoneNumber)
 	return
 }
 
-func (s *UserUseCase) RegisterUserOwner(ctx context.Context, userEntity *userRepository.UserEntity, userCIFEntity *userRepository.UserCIFEntity) (err error) {
+func (s *UserUseCase) RegisterUserOwner(ctx context.Context, userEntity *userRepository.UserEntity,
+	userCIFEntity *userRepository.CIFEntity, phoneNumberEntity *userRepository.PhoneNumberEntity) (err error) {
+
 	var tx *sqlx.Tx
 	tx, err = s.db.CreateDBTransaction(ctx)
 	if err != nil {
@@ -88,6 +102,11 @@ func (s *UserUseCase) RegisterUserOwner(ctx context.Context, userEntity *userRep
 		return
 	}
 	err = s.userRepo.InsertCIF(ctx, tx, userCIFEntity)
+	if err != nil {
+		tx.Rollback()
+		return
+	}
+	err = s.userRepo.InsertPhoneNumber(ctx, tx, phoneNumberEntity)
 	if err != nil {
 		tx.Rollback()
 		return

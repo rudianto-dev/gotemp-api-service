@@ -27,19 +27,19 @@ func (s *UserRepository) GetCIFByReferenceID(ctx context.Context, referenceID st
 	}
 	defer rows.Close()
 
-	UserCIFEntity := userRepository.UserCIFEntity{}
+	CIFEntity := userRepository.CIFEntity{}
 	if rows.Next() {
-		err = rows.StructScan(&UserCIFEntity)
+		err = rows.StructScan(&CIFEntity)
 		if err != nil {
 			s.logger.ErrorWithContext(ctx, utils.ERROR_REPOSITORY_STAGE, err.Error())
 			err = utils.ErrQueryRead
 			return
 		}
 	}
-	if UserCIFEntity.ID == "" {
+	if CIFEntity.ID == "" {
 		err = utils.ErrNotFound
 		return
 	}
-	CIF = userRepository.ToUserCIFDomain(&UserCIFEntity)
+	CIF = userRepository.ToCIFDomain(&CIFEntity)
 	return
 }

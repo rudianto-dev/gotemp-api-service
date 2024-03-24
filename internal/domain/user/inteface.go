@@ -19,7 +19,10 @@ type Repository interface {
 	GetByUsername(ctx context.Context, username string) (*userDomain.User, error)
 
 	GetCIFByReferenceID(ctx context.Context, referenceID string) (*userDomain.CIF, error)
-	InsertCIF(ctx context.Context, tx *sqlx.Tx, userCIFEntity *userRepository.UserCIFEntity) error
+	InsertCIF(ctx context.Context, tx *sqlx.Tx, CIFEntity *userRepository.CIFEntity) error
+	InsertPhoneNumber(ctx context.Context, tx *sqlx.Tx, PhoneNumberEntity *userRepository.PhoneNumberEntity) error
+	InsertEmail(ctx context.Context, tx *sqlx.Tx, EmailEntity *userRepository.EmailEntity) error
+	InsertDeviceInstance(ctx context.Context, tx *sqlx.Tx, DeviceInstanceEntity *userRepository.DeviceInstanceEntity) error
 }
 
 type UseCase interface {
