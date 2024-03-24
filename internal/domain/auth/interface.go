@@ -13,9 +13,13 @@ type Repository interface {
 type UseCase interface {
 	CheckAccount(ctx context.Context, req authContract.CheckAccountRequest) (*authContract.CheckAccountResponse, error)
 	ResetPassword(ctx context.Context, req authContract.ResetPasswordRequest) (*authContract.ResetPasswordResponse, error)
+
+	Login(ctx context.Context, req authContract.LoginRequest) (*authContract.LoginResponse, error)
 }
 
 type HandlerAPI interface {
 	CheckAccount(w http.ResponseWriter, r *http.Request)
 	ResetPassword(w http.ResponseWriter, r *http.Request)
+
+	Login(w http.ResponseWriter, r *http.Request)
 }

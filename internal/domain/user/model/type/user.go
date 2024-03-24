@@ -10,8 +10,9 @@ var (
 )
 
 type Create struct {
-	Name   string
-	Status Status
+	Name     string
+	Username string
+	Status   Status
 }
 
 type Edit struct {

@@ -12,7 +12,7 @@ import (
 )
 
 func (m *Module) ExternalRoute() *chi.Mux {
-	authUseCase := authUseCase.NewUseCase(m.Infra.Logger, m.Infra.DB, m.UserRepository, m.OTPRepository)
+	authUseCase := authUseCase.NewUseCase(m.Infra.Logger, m.Infra.JWT, m.Infra.DB, m.UserRepository, m.OTPRepository)
 	userUseCase := userUseCase.NewUseCase(m.Infra.Logger, m.Infra.DB, m.UserRepository)
 	otpUseCase := otpUseCase.NewUseCase(m.Infra.Logger, m.OTPRepository)
 
@@ -24,13 +24,12 @@ func (m *Module) ExternalRoute() *chi.Mux {
 	router := chi.NewRouter()
 	router.Route("/v1", func(router chi.Router) {
 		router.Post("/health", utilHandler.GetHealthStatus)
-
 		router.Route("/user", func(router chi.Router) {
 			router.Post("/onboarding", userHandler.Onboarding)
 		})
 		router.Route("/auth", func(router chi.Router) {
 			router.Get("/account/{username}", authHandler.CheckAccount)
-			router.Post("/login", authHandler.CheckAccount)
+			router.Post("/login", authHandler.Login)
 			router.Post("/logout", authHandler.CheckAccount)
 			router.Post("/refresh-token", authHandler.CheckAccount)
 		})

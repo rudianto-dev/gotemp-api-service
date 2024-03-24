@@ -9,6 +9,7 @@ import (
 	userRepository "github.com/rudianto-dev/gotemp-api-service/internal/repository/user"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/database"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/logger"
+	"github.com/rudianto-dev/gotemp-sdk/pkg/token"
 )
 
 type Module struct {
@@ -20,6 +21,7 @@ type Module struct {
 type Service struct {
 	Config *configuration.ConfigurationSchema
 	Logger *logger.Logger
+	JWT    *token.JWT
 	DB     *database.DB
 	Redis  *redis.Client
 }

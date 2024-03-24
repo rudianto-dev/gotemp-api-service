@@ -11,6 +11,8 @@ import (
 type User struct {
 	ID        string
 	Name      string
+	Username  string
+	Password  string
 	Status    userType.Status
 	CreatedAt int64
 	UpdatedAt int64
@@ -21,6 +23,7 @@ func New(req userType.Create) (domain *User, err error) {
 	domain = &User{
 		ID:        utils.GenerateUUID(),
 		Name:      req.Name,
+		Username:  req.Username,
 		Status:    req.Status,
 		CreatedAt: time,
 		UpdatedAt: time,

@@ -22,3 +22,11 @@ func (domain *Auth) HashPassword() (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(domain.Password), bcrypt.DefaultCost)
 	return string(bytes), err
 }
+
+func (domain *Auth) CheckPassword(providedPassword string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(domain.Password), []byte(providedPassword))
+	if err != nil {
+		return err
+	}
+	return nil
+}

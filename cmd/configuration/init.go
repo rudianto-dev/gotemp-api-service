@@ -8,6 +8,8 @@ import (
 
 type ConfigurationSchema struct {
 	Host     Host     `json:"host"`
+	JWT      JWT      `json:"jwt"`
+	OTP      OTP      `json:"otp"`
 	Database Database `json:"database"`
 	Redis    Redis    `json:"redis"`
 	Graceful Graceful `json:"graceful"`
@@ -16,6 +18,17 @@ type ConfigurationSchema struct {
 type Host struct {
 	Address string `json:"address"`
 	Debug   bool   `json:"debug"`
+}
+
+type JWT struct {
+	Public       string `json:"public"`
+	Private      string `json:"private"`
+	ExpireInHour int    `json:"expire_in_hour" mapstructure:"expire_in_hour"`
+}
+
+type OTP struct {
+	ExpireInSecond             int `json:"expire_in_second" mapstructure:"expire_in_second"`
+	VerificationExpireInSecond int `json:"verification_expire_in_second" mapstructure:"verification_expire_in_second"`
 }
 
 type Database struct {

@@ -12,6 +12,7 @@ func (srv *Service) CreateRouting() *chi.Mux {
 		Logger: srv.Logger,
 		DB:     srv.DB,
 		Redis:  srv.Redis,
+		JWT:    srv.JWT,
 	})
 
 	router := chi.NewRouter()

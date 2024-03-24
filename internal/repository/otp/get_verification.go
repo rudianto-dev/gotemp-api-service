@@ -16,14 +16,14 @@ func (s *OTPRepository) GetVerification(ctx context.Context, verificationID stri
 	if err != nil {
 		s.logger.ErrorWithContext(ctx, utils.ERROR_REPOSITORY_STAGE, err.Error())
 		if err == redis.Nil {
-			err = utils.ErrExpiredOTP
+			err = utils.ErrExpiredVerificationOTP
 		} else {
 			err = utils.ErrRepositoryOTP
 		}
 		return
 	}
 	if (payload == "") || (strings.Compare(payload, "") == 0) {
-		err = utils.ErrExpiredOTP
+		err = utils.ErrExpiredVerificationOTP
 	}
 	otp, err = otpRepository.ToVerificationDomain(payload)
 	if err != nil {

@@ -3,8 +3,6 @@ package user
 import (
 	"context"
 
-	authDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/auth/model"
-	authType "github.com/rudianto-dev/gotemp-api-service/internal/domain/auth/model/type"
 	userContract "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/contract"
 	userDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/model"
 	userType "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/model/type"
@@ -14,18 +12,14 @@ import (
 func (s *UserUseCase) Create(ctx context.Context, req userContract.CreateRequest) (res *userContract.CreateResponse, err error) {
 
 	newUser, err := userDomain.New(userType.Create{
-		Name:   req.Name,
-		Status: userType.USER_STATUS_PREREGISTERED,
+		Name:     req.Name,
+		Username: req.Username,
+		Status:   userType.USER_STATUS_PREREGISTERED,
 	})
 	if err != nil {
 		return
 	}
-
-	newAuth := authDomain.New(authType.Credential{
-		Username: req.Username,
-	})
-
-	userEntity := userRepository.ToUserEntity(newUser, newAuth)
+	userEntity := userRepository.ToUserEntity(newUser)
 	err = s.userRepo.Insert(ctx, nil, userEntity)
 	if err != nil {
 		return

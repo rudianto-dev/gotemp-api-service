@@ -1,10 +1,13 @@
 package infrastructure
 
 import (
+	"time"
+
 	"github.com/go-redis/redis"
 	"github.com/rudianto-dev/gotemp-api-service/cmd/configuration"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/database"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/logger"
+	"github.com/rudianto-dev/gotemp-sdk/pkg/token"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -13,6 +16,7 @@ type Service struct {
 	Logger *logger.Logger
 	DB     *database.DB
 	Redis  *redis.Client
+	JWT    *token.JWT
 }
 
 func New(cf *configuration.ConfigurationSchema) *Service {
@@ -24,12 +28,14 @@ func New(cf *configuration.ConfigurationSchema) *Service {
 		log.Panicf("failed connect to database, %v", err)
 	}
 	db.CheckConnection()
-	// setup cache
+	// setup jwt
+	jwt := token.New([]byte(cf.JWT.Private), []byte(cf.JWT.Public), time.Hour*time.Duration(cf.JWT.ExpireInHour), logger)
 
 	return &Service{
 		Config: cf,
 		Logger: logger,
 		DB:     db,
 		Redis:  cf.NewRedis(),
+		JWT:    jwt,
 	}
 }

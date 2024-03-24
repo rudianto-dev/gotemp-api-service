@@ -14,7 +14,7 @@ func (s *UserUseCase) Update(ctx context.Context, req userContract.UpdateRequest
 	}
 	updateUser.Name = req.Name
 
-	userEntity := userRepository.ToUserEntity(updateUser, nil)
+	userEntity := userRepository.ToUserEntity(updateUser)
 	err = s.userRepo.Update(ctx, nil, userEntity)
 	if err != nil {
 		return

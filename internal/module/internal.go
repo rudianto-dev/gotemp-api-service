@@ -12,7 +12,6 @@ func (m *Module) InternalRoute() *chi.Mux {
 
 	router := chi.NewRouter()
 	router.Route("/v1", func(router chi.Router) {
-
 		router.Route("/user", func(router chi.Router) {
 			router.Post("/list", handler.List)
 			router.Get("/{id}", handler.Detail)

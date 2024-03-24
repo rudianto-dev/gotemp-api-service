@@ -6,4 +6,6 @@ type ResetPasswordRequest struct {
 }
 
 type ResetPasswordResponse struct {
+	Token     string `json:"token" validate:"required"`
+	ExpiredAt int64  `json:"expired_at" validate:"required"`
 }

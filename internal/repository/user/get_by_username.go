@@ -11,7 +11,7 @@ import (
 
 func (s *UserRepository) GetByUsername(ctx context.Context, username string) (user *userDomain.User, err error) {
 	sqlCommand := `
-		SELECT id, name, status, created_at, updated_at
+		SELECT id, name, username, password, status, created_at, updated_at
 		FROM %s
 		WHERE username=:username
 	`
