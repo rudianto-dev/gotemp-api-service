@@ -9,6 +9,7 @@ import (
 	authUseCase "github.com/rudianto-dev/gotemp-api-service/internal/usecase/auth"
 	otpUseCase "github.com/rudianto-dev/gotemp-api-service/internal/usecase/otp"
 	userUseCase "github.com/rudianto-dev/gotemp-api-service/internal/usecase/user"
+	"github.com/rudianto-dev/gotemp-sdk/pkg/middleware"
 )
 
 func (m *Module) ExternalRoute() *chi.Mux {
@@ -26,12 +27,21 @@ func (m *Module) ExternalRoute() *chi.Mux {
 		router.Post("/health", utilHandler.GetHealthStatus)
 		router.Route("/user", func(router chi.Router) {
 			router.Post("/onboarding", userHandler.Onboarding)
+
+			router.Group(func(router chi.Router) {
+				router.Use(middleware.GuardAuthenticated(middleware.TokenFromHeader))
+				router.Get("/profile", authHandler.CheckAccount)
+			})
 		})
 		router.Route("/auth", func(router chi.Router) {
 			router.Get("/account/{username}", authHandler.CheckAccount)
 			router.Post("/login", authHandler.Login)
-			router.Post("/logout", authHandler.CheckAccount)
-			router.Post("/refresh-token", authHandler.CheckAccount)
+
+			router.Group(func(router chi.Router) {
+				router.Use(middleware.GuardAuthenticated(middleware.TokenFromHeader))
+				router.Post("/logout", authHandler.CheckAccount)
+				router.Post("/refresh-token", authHandler.CheckAccount)
+			})
 		})
 		router.Route("/password", func(router chi.Router) {
 			router.Post("/check", authHandler.CheckAccount)
