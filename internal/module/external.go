@@ -13,7 +13,7 @@ import (
 )
 
 func (m *Module) ExternalRoute() *chi.Mux {
-	authUseCase := authUseCase.NewUseCase(m.Infra.Logger, m.Infra.JWT, m.Infra.DB, m.UserRepository, m.OTPRepository)
+	authUseCase := authUseCase.NewUseCase(m.Infra.Logger, m.Infra.JWT, m.Infra.DB, m.AuthRepository, m.UserRepository, m.OTPRepository)
 	userUseCase := userUseCase.NewUseCase(m.Infra.Logger, m.Infra.DB, m.UserRepository)
 	otpUseCase := otpUseCase.NewUseCase(m.Infra.Logger, m.OTPRepository)
 
@@ -27,7 +27,6 @@ func (m *Module) ExternalRoute() *chi.Mux {
 		router.Post("/health", utilHandler.GetHealthStatus)
 		router.Route("/user", func(router chi.Router) {
 			router.Post("/onboarding", userHandler.Onboarding)
-
 			router.Group(func(router chi.Router) {
 				router.Use(middleware.GuardAuthenticated(middleware.TokenFromHeader))
 				router.Get("/profile", userHandler.Profile)
@@ -36,7 +35,6 @@ func (m *Module) ExternalRoute() *chi.Mux {
 		router.Route("/auth", func(router chi.Router) {
 			router.Get("/account/{username}", authHandler.CheckAccount)
 			router.Post("/login", authHandler.Login)
-
 			router.Group(func(router chi.Router) {
 				router.Use(middleware.GuardAuthenticated(middleware.TokenFromHeader))
 				router.Post("/logout", authHandler.CheckAccount)
@@ -44,7 +42,10 @@ func (m *Module) ExternalRoute() *chi.Mux {
 			})
 		})
 		router.Route("/password", func(router chi.Router) {
-			router.Post("/check", authHandler.CheckAccount)
+			router.Group(func(router chi.Router) {
+				router.Use(middleware.GuardAuthenticated(middleware.TokenFromHeader))
+				router.Post("/check", authHandler.CheckPassword)
+			})
 			router.Post("/reset", authHandler.ResetPassword)
 		})
 		router.Route("/otp", func(router chi.Router) {

@@ -14,7 +14,7 @@ func (s *UserHandler) Profile(w http.ResponseWriter, r *http.Request) {
 
 	claim := middleware.GetClaims(r)
 	request := userContract.ProfileRequest{
-		UserID: claim.ID,
+		UserID: claim.UserID,
 	}
 	err := utils.ValidateStruct(request)
 	if err != nil {

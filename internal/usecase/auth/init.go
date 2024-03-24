@@ -13,17 +13,19 @@ type AuthUseCase struct {
 	logger         logger.ILogger
 	jwt            token.IJWTToken
 	db             database.IDatabase
+	authRepository authInterface.Repository
 	userRepository userInterface.Repository
 	otpRepository  otpInterface.Repository
 }
 
-func NewUseCase(logger logger.ILogger, jwt token.IJWTToken, db database.IDatabase, userRepository userInterface.Repository,
-	otpRepository otpInterface.Repository) authInterface.UseCase {
+func NewUseCase(logger logger.ILogger, jwt token.IJWTToken, db database.IDatabase,
+	authRepository authInterface.Repository, userRepository userInterface.Repository, otpRepository otpInterface.Repository) authInterface.UseCase {
 
 	return &AuthUseCase{
 		logger:         logger,
 		jwt:            jwt,
 		db:             db,
+		authRepository: authRepository,
 		userRepository: userRepository,
 		otpRepository:  otpRepository,
 	}
