@@ -27,7 +27,7 @@ func (s *AuthUseCase) Login(ctx context.Context, req authContract.LoginRequest) 
 		err = utils.ErrInvalidCredential
 		return
 	}
-	token, expiredAt, err := s.jwt.Create(token.Payload{ID: user.ID, Role: "owner"})
+	token, expiredAt, err := s.jwt.Create(token.Payload{ID: user.ID, RoleType: int8(user.RoleType)})
 	if err != nil {
 		return
 	}

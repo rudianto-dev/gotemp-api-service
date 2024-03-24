@@ -15,6 +15,7 @@ type Merchant struct {
 
 type CIF struct {
 	ID          string      `json:"id" validate:"required"`
+	Name        string      `json:"name" validate:"required"`
 	PhoneNumber string      `json:"phone_number" validate:"required"`
 	Merchant    []*Merchant `json:"merchant" validate:"required,dive,required"`
 }

@@ -11,8 +11,8 @@ import (
 
 func (s *UserRepository) Insert(ctx context.Context, tx *sqlx.Tx, userEntity *userRepository.UserEntity) (err error) {
 	sqlCommand := `
-		INSERT INTO %s (id, name, username, status, created_at, updated_at)
-		VALUES (:id, :name, :username, :status, :created_at, :updated_at)
+		INSERT INTO %s (id, name, username, status, role_type, created_at, updated_at)
+		VALUES (:id, :name, :username, :status, :role_type, :created_at, :updated_at)
 	`
 	sqlCommand = fmt.Sprintf(sqlCommand, sqlUserTable)
 	params := map[string]interface{}{
@@ -20,6 +20,7 @@ func (s *UserRepository) Insert(ctx context.Context, tx *sqlx.Tx, userEntity *us
 		"name":       userEntity.Name,
 		"username":   userEntity.Username,
 		"status":     userEntity.Status,
+		"role_type":  userEntity.RoleType,
 		"created_at": userEntity.CreatedAt,
 		"updated_at": userEntity.UpdatedAt,
 	}

@@ -20,6 +20,7 @@ func upCreateUserTable(ctx context.Context, tx *sql.Tx) error {
 			username VARCHAR (100) NOT NULL,
 			password VARCHAR (100) NOT NULL DEFAULT '',
 			status SMALLINT NOT NULL DEFAULT 0,
+			role_type SMALLINT NOT NULL DEFAULT 0,
 			created_at BIGINT NOT NULL DEFAULT 0,
 			updated_at BIGINT NOT NULL DEFAULT 0,
 			deleted_at BIGINT NOT NULL DEFAULT 0,

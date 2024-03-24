@@ -11,6 +11,7 @@ type UserEntity struct {
 	Username  string `json:"username" db:"username"`
 	Password  string `json:"password" db:"password"`
 	Status    int8   `json:"status" db:"status"`
+	RoleType  int8   `json:"role_type" db:"role_type"`
 	CreatedAt int64  `json:"created_at" db:"created_at"`
 	UpdatedAt int64  `json:"updated_at" db:"updated_at"`
 }
@@ -20,6 +21,7 @@ func ToUserEntity(domain *userDomain.User) *UserEntity {
 		ID:        domain.ID,
 		Name:      domain.Name,
 		Status:    int8(domain.Status),
+		RoleType:  int8(domain.RoleType),
 		CreatedAt: domain.CreatedAt,
 		UpdatedAt: domain.UpdatedAt,
 	}
@@ -36,6 +38,7 @@ func ToUserDomain(entity *UserEntity) *userDomain.User {
 		Username:  entity.Username,
 		Password:  entity.Password,
 		Status:    userType.Status(entity.Status),
+		RoleType:  userType.RoleType(entity.RoleType),
 		CreatedAt: entity.CreatedAt,
 		UpdatedAt: entity.UpdatedAt,
 	}

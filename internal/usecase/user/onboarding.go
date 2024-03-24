@@ -22,7 +22,7 @@ func (s *UserUseCase) Onboarding(ctx context.Context, req userContract.Onboardin
 			userCIFEntity     *userRepository.CIFEntity
 			phoneNumberEntity *userRepository.PhoneNumberEntity
 		)
-		userEntity, userCIFEntity, phoneNumberEntity, err = s.buildRegisterUserOwner(ctx, req.CIF.PhoneNumber, req.CIF.ID)
+		userEntity, userCIFEntity, phoneNumberEntity, err = s.buildRegisterUserOwner(ctx, req.CIF.Name, req.CIF.PhoneNumber, req.CIF.ID)
 		if err != nil {
 			return
 		}
@@ -37,7 +37,7 @@ func (s *UserUseCase) Onboarding(ctx context.Context, req userContract.Onboardin
 	return
 }
 
-func (s *UserUseCase) buildRegisterUserOwner(ctx context.Context, phoneNumber, referenceID string) (
+func (s *UserUseCase) buildRegisterUserOwner(ctx context.Context, name, phoneNumber, referenceID string) (
 	userEntity *userRepository.UserEntity, cifEntity *userRepository.CIFEntity, phoneNumberEntity *userRepository.PhoneNumberEntity, err error) {
 
 	var (
@@ -55,9 +55,10 @@ func (s *UserUseCase) buildRegisterUserOwner(ctx context.Context, phoneNumber, r
 	}
 
 	newUser, err = userDomain.New(userType.Create{
-		Name:     phoneNumber,
+		Name:     name,
 		Username: phoneNumber,
 		Status:   userType.USER_STATUS_PREREGISTERED,
+		RoleType: userType.USER_ROLE_TYPE_OWNER,
 	})
 	if err != nil {
 		return

@@ -14,6 +14,7 @@ type User struct {
 	Username  string
 	Password  string
 	Status    userType.Status
+	RoleType  userType.RoleType
 	CreatedAt int64
 	UpdatedAt int64
 }
@@ -25,6 +26,7 @@ func New(req userType.Create) (domain *User, err error) {
 		Name:      req.Name,
 		Username:  req.Username,
 		Status:    req.Status,
+		RoleType:  req.RoleType,
 		CreatedAt: time,
 		UpdatedAt: time,
 	}
