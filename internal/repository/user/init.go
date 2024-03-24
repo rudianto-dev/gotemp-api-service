@@ -16,6 +16,7 @@ const (
 	sqlUserPhoneNumberTable    = "user_phone_numbers"
 	sqlUserEmailTable          = "user_emails"
 	sqlUserDeviceInstanceTable = "user_device_instances"
+	sqlUserCifTable            = "user_cif"
 )
 
 func NewUserRepository(logger *logger.Logger, db *database.DB) (userInterface.Repository, error) {

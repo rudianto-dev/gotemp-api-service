@@ -11,11 +11,15 @@ import (
 )
 
 type Repository interface {
-	Insert(ctx context.Context, tx *sqlx.Tx, user *userRepository.UserEntity) error
-	Update(ctx context.Context, tx *sqlx.Tx, user *userRepository.UserEntity) error
+	Insert(ctx context.Context, tx *sqlx.Tx, userEntity *userRepository.UserEntity) error
+	Update(ctx context.Context, tx *sqlx.Tx, userEntity *userRepository.UserEntity) error
 	Delete(ctx context.Context, tx *sqlx.Tx, ID string) error
 	GetByID(ctx context.Context, ID string) (*userDomain.User, error)
 	List(ctx context.Context) ([]*userDomain.User, error)
+	GetByUsername(ctx context.Context, username string) (*userDomain.User, error)
+
+	GetCIFByReferenceID(ctx context.Context, referenceID string) (*userDomain.CIF, error)
+	InsertCIF(ctx context.Context, tx *sqlx.Tx, userCIFEntity *userRepository.UserCIFEntity) error
 }
 
 type UseCase interface {
@@ -24,7 +28,8 @@ type UseCase interface {
 	Delete(ctx context.Context, req userContract.DeleteRequest) (*userContract.DeleteResponse, error)
 	Detail(ctx context.Context, req userContract.DetailRequest) (*userContract.DetailResponse, error)
 	List(ctx context.Context, req userContract.ListRequest) (*userContract.ListResponse, error)
-	// RegisterUser()
+
+	Onboarding(ctx context.Context, req userContract.OnboardingRequest) (*userContract.OnboardingResponse, error)
 }
 
 type HandlerAPI interface {
@@ -33,5 +38,6 @@ type HandlerAPI interface {
 	Create(w http.ResponseWriter, r *http.Request)
 	Update(w http.ResponseWriter, r *http.Request)
 	Delete(w http.ResponseWriter, r *http.Request)
-	// OnBoarding()
+
+	Onboarding(w http.ResponseWriter, r *http.Request)
 }

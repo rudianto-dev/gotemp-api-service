@@ -7,7 +7,7 @@ import (
 	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
-type UserEmail struct {
+type Email struct {
 	ID        string
 	Email     string
 	UserID    string
@@ -15,13 +15,13 @@ type UserEmail struct {
 	UpdatedAt int64
 }
 
-func NewUserEmail(req userType.CreateEmail) (domain *UserEmail, err error) {
+func NewEmail(req userType.CreateEmail) (domain *Email, err error) {
 	time := time.Now().Unix()
 	if req.UserID == "" {
 		err = utils.ErrBadRequest
 		return
 	}
-	domain = &UserEmail{
+	domain = &Email{
 		ID:        utils.GenerateUUID(),
 		Email:     req.Email,
 		UserID:    req.UserID,
@@ -31,7 +31,7 @@ func NewUserEmail(req userType.CreateEmail) (domain *UserEmail, err error) {
 	return
 }
 
-func UpdateUserEmail(req userType.UpdateEmail) (domain *UserEmail, err error) {
+func UpdateEmail(req userType.UpdateEmail) (domain *Email, err error) {
 	time := time.Now().Unix()
 	if req.ID == "" {
 		err = utils.ErrBadRequest
@@ -41,7 +41,7 @@ func UpdateUserEmail(req userType.UpdateEmail) (domain *UserEmail, err error) {
 		err = utils.ErrBadRequest
 		return
 	}
-	domain = &UserEmail{
+	domain = &Email{
 		ID:        req.ID,
 		Email:     req.Email,
 		UpdatedAt: time,

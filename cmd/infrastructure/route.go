@@ -26,11 +26,8 @@ func (srv *Service) CreateRouting() *chi.Mux {
 	)
 
 	router.Route("/", func(router chi.Router) {
-		router.Mount("/utility", module.UtilRouting())
-
-		router.Route("/v1", func(router chi.Router) {
-			router.Mount("/user", module.UserRouting())
-		})
+		router.Mount("/external", module.ExternalRoute())
+		router.Mount("/internal", module.InternalRoute())
 	})
 	return router
 }

@@ -9,15 +9,15 @@ import (
 	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
-func (s *UserRepository) GetByID(ctx context.Context, ID string) (user *userDomain.User, err error) {
+func (s *UserRepository) GetByUsername(ctx context.Context, username string) (user *userDomain.User, err error) {
 	sqlCommand := `
 		SELECT id, name, status, created_at, updated_at
 		FROM %s
-		WHERE id=:id
+		WHERE username=:username
 	`
 	sqlCommand = fmt.Sprintf(sqlCommand, sqlUserTable)
 	params := map[string]interface{}{
-		"id": ID,
+		"username": username,
 	}
 	rows, err := s.db.Read(ctx, sqlCommand, params)
 	if err != nil {

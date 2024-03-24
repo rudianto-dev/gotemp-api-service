@@ -21,6 +21,7 @@ func New(req userType.Create) (domain *User, err error) {
 	domain = &User{
 		ID:        utils.GenerateUUID(),
 		Name:      req.Name,
+		Status:    req.Status,
 		CreatedAt: time,
 		UpdatedAt: time,
 	}

@@ -13,7 +13,7 @@ func (s *UserRepository) List(ctx context.Context) (users []*userDomain.User, er
 	userEntities := []*userRepository.UserEntity{}
 	params := map[string]interface{}{}
 	sqlCommand := `
-		SELECT id, name, created_at, updated_at
+		SELECT id, name, status, created_at, updated_at
 		FROM %s
 	`
 	sqlCommand = fmt.Sprintf(sqlCommand, sqlUserTable)

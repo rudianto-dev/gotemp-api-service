@@ -53,3 +53,14 @@ type UpdateDeviceInstance struct {
 	InstanceID string
 	UserID     string
 }
+
+type CreateCIF struct {
+	UserID      string
+	ReferenceID string
+}
+
+type UpdateCIF struct {
+	ID          string
+	UserID      string
+	ReferenceID string
+}

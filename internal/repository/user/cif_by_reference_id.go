@@ -9,15 +9,15 @@ import (
 	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
-func (s *UserRepository) GetByID(ctx context.Context, ID string) (user *userDomain.User, err error) {
+func (s *UserRepository) GetCIFByReferenceID(ctx context.Context, referenceID string) (CIF *userDomain.CIF, err error) {
 	sqlCommand := `
-		SELECT id, name, status, created_at, updated_at
+		SELECT id, user_id, reference_id, created_at, updated_at
 		FROM %s
-		WHERE id=:id
+		WHERE reference_id=:reference_id
 	`
-	sqlCommand = fmt.Sprintf(sqlCommand, sqlUserTable)
+	sqlCommand = fmt.Sprintf(sqlCommand, sqlUserCifTable)
 	params := map[string]interface{}{
-		"id": ID,
+		"reference_id": referenceID,
 	}
 	rows, err := s.db.Read(ctx, sqlCommand, params)
 	if err != nil {
@@ -27,19 +27,19 @@ func (s *UserRepository) GetByID(ctx context.Context, ID string) (user *userDoma
 	}
 	defer rows.Close()
 
-	userEntity := userRepository.UserEntity{}
+	UserCIFEntity := userRepository.UserCIFEntity{}
 	if rows.Next() {
-		err = rows.StructScan(&userEntity)
+		err = rows.StructScan(&UserCIFEntity)
 		if err != nil {
 			s.logger.ErrorWithContext(ctx, utils.ERROR_REPOSITORY_STAGE, err.Error())
 			err = utils.ErrQueryRead
 			return
 		}
 	}
-	if userEntity.ID == "" {
+	if UserCIFEntity.ID == "" {
 		err = utils.ErrNotFound
 		return
 	}
-	user = userRepository.ToUserDomain(&userEntity)
+	CIF = userRepository.ToUserCIFDomain(&UserCIFEntity)
 	return
 }
