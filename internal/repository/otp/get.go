@@ -2,7 +2,6 @@ package otp
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	"github.com/go-redis/redis"
@@ -14,7 +13,6 @@ import (
 func (s *OTPRepository) Get(ctx context.Context, receiver string) (otp *otpDomain.OTP, err error) {
 	var payload string
 	payload, err = s.redis.Get(otpRepository.GetOTPKey(receiver)).Result()
-	fmt.Println("sss ", payload)
 	if err != nil {
 		s.logger.ErrorWithContext(ctx, utils.ERROR_REPOSITORY_STAGE, err.Error())
 		if err == redis.Nil {

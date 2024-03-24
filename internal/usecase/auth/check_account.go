@@ -7,7 +7,7 @@ import (
 )
 
 func (s *AuthUseCase) CheckAccount(ctx context.Context, req authContract.CheckAccountRequest) (res *authContract.CheckAccountResponse, err error) {
-	user, err := s.userRepo.GetByUsername(ctx, req.Username)
+	user, err := s.userRepository.GetByUsername(ctx, req.Username)
 	if err != nil {
 		return
 	}

@@ -17,5 +17,5 @@ type UseCase interface {
 
 type HandlerAPI interface {
 	CheckAccount(w http.ResponseWriter, r *http.Request)
-	// ResetPassword(w http.ResponseWriter, r *http.Request)
+	ResetPassword(w http.ResponseWriter, r *http.Request)
 }

@@ -12,7 +12,7 @@ import (
 )
 
 func (m *Module) ExternalRoute() *chi.Mux {
-	authUseCase := authUseCase.NewUseCase(m.Infra.Logger, m.Infra.DB, m.UserRepository)
+	authUseCase := authUseCase.NewUseCase(m.Infra.Logger, m.Infra.DB, m.UserRepository, m.OTPRepository)
 	userUseCase := userUseCase.NewUseCase(m.Infra.Logger, m.Infra.DB, m.UserRepository)
 	otpUseCase := otpUseCase.NewUseCase(m.Infra.Logger, m.OTPRepository)
 
@@ -36,7 +36,7 @@ func (m *Module) ExternalRoute() *chi.Mux {
 		})
 		router.Route("/password", func(router chi.Router) {
 			router.Post("/check", authHandler.CheckAccount)
-			router.Post("/reset", authHandler.CheckAccount)
+			router.Post("/reset", authHandler.ResetPassword)
 		})
 		router.Route("/otp", func(router chi.Router) {
 			router.Post("/send", otpHandler.SendOTP)

@@ -21,12 +21,9 @@ func (s *UserUseCase) Create(ctx context.Context, req userContract.CreateRequest
 		return
 	}
 
-	newAuth, err := authDomain.New(authType.Credential{
+	newAuth := authDomain.New(authType.Credential{
 		Username: req.Username,
 	})
-	if err != nil {
-		return
-	}
 
 	userEntity := userRepository.ToUserEntity(newUser, newAuth)
 	err = s.userRepo.Insert(ctx, nil, userEntity)

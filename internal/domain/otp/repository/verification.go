@@ -25,7 +25,7 @@ func ToVerificationEntity(domain *otpDomain.Verification) (entity *VerificationE
 		return
 	}
 	entity = &VerificationEntity{
-		Key:     fmt.Sprintf(prefixVerification, domain.Receiver),
+		Key:     fmt.Sprintf(prefixVerification, domain.UID),
 		Payload: cast.ToString(payload),
 		TTL:     time.Second * time.Duration(domain.DurationInSecond),
 	}

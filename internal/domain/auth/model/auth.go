@@ -6,28 +6,19 @@ import (
 )
 
 type Auth struct {
-	Username      string
-	PlainPassword string
-	HashPassword  string
+	Username string
+	Password string
 }
 
-func New(req authType.Credential) (domain *Auth, err error) {
+func New(req authType.Credential) (domain *Auth) {
 	domain = &Auth{
-		Username:      req.Username,
-		PlainPassword: req.Password,
-	}
-	if req.Password != "" {
-		var hash string
-		hash, err = HashPassword(req.Password)
-		if err != nil {
-			return
-		}
-		domain.HashPassword = hash
+		Username: req.Username,
+		Password: req.Password,
 	}
 	return
 }
 
-func HashPassword(plain string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(plain), bcrypt.DefaultCost)
+func (domain *Auth) HashPassword() (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(domain.Password), bcrypt.DefaultCost)
 	return string(bytes), err
 }

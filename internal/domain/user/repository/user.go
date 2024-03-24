@@ -26,7 +26,6 @@ func ToUserEntity(domain *userDomain.User, authDomain *authDomain.Auth) *UserEnt
 	}
 	if authDomain != nil {
 		user.Username = authDomain.Username
-		user.Password = authDomain.HashPassword
 	}
 	return user
 }

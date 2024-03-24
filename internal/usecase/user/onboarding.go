@@ -64,10 +64,7 @@ func (s *UserUseCase) buildRegisterUserOwner(ctx context.Context, phoneNumber, r
 	if err != nil {
 		return
 	}
-	newAuth, err = authDomain.New(authType.Credential{Username: phoneNumber})
-	if err != nil {
-		return
-	}
+	newAuth = authDomain.New(authType.Credential{Username: phoneNumber})
 	newCif, err = userDomain.NewCIF(userType.CreateCIF{
 		UserID:      newUser.ID,
 		ReferenceID: referenceID,

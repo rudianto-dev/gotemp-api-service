@@ -7,16 +7,19 @@ import (
 	"github.com/jmoiron/sqlx"
 	userContract "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/contract"
 	userDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/model"
+	userType "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/model/type"
 	userRepository "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/repository"
 )
 
 type Repository interface {
 	Insert(ctx context.Context, tx *sqlx.Tx, userEntity *userRepository.UserEntity) error
 	Update(ctx context.Context, tx *sqlx.Tx, userEntity *userRepository.UserEntity) error
+	UpdatePassword(ctx context.Context, tx *sqlx.Tx, ID, password string) error
+	UpdateStatus(ctx context.Context, tx *sqlx.Tx, ID string, status userType.Status) error
 	Delete(ctx context.Context, tx *sqlx.Tx, ID string) error
 	GetByID(ctx context.Context, ID string) (*userDomain.User, error)
-	List(ctx context.Context) ([]*userDomain.User, error)
 	GetByUsername(ctx context.Context, username string) (*userDomain.User, error)
+	List(ctx context.Context) ([]*userDomain.User, error)
 
 	GetCIFByReferenceID(ctx context.Context, referenceID string) (*userDomain.CIF, error)
 	InsertCIF(ctx context.Context, tx *sqlx.Tx, CIFEntity *userRepository.CIFEntity) error
