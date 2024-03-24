@@ -3,6 +3,7 @@ package repository
 import (
 	authDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/auth/model"
 	userDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/model"
+	userType "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/model/type"
 )
 
 type UserEntity struct {
@@ -34,6 +35,7 @@ func ToUserDomain(entity *UserEntity) *userDomain.User {
 	return &userDomain.User{
 		ID:        entity.ID,
 		Name:      entity.Name,
+		Status:    userType.Status(entity.Status),
 		CreatedAt: entity.CreatedAt,
 		UpdatedAt: entity.UpdatedAt,
 	}
