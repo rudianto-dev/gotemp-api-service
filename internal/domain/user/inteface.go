@@ -26,6 +26,8 @@ type Repository interface {
 	InsertPhoneNumber(ctx context.Context, tx *sqlx.Tx, PhoneNumberEntity *userRepository.PhoneNumberEntity) error
 	InsertEmail(ctx context.Context, tx *sqlx.Tx, EmailEntity *userRepository.EmailEntity) error
 	InsertDeviceInstance(ctx context.Context, tx *sqlx.Tx, DeviceInstanceEntity *userRepository.DeviceInstanceEntity) error
+
+	ListPhoneNumberGetByUserID(ctx context.Context, UserID string) ([]*userDomain.PhoneNumber, error)
 }
 
 type UseCase interface {
@@ -36,6 +38,7 @@ type UseCase interface {
 	List(ctx context.Context, req userContract.ListRequest) (*userContract.ListResponse, error)
 
 	Onboarding(ctx context.Context, req userContract.OnboardingRequest) (*userContract.OnboardingResponse, error)
+	Profile(ctx context.Context, req userContract.ProfileRequest) (*userContract.ProfileResponse, error)
 }
 
 type HandlerAPI interface {
@@ -46,4 +49,5 @@ type HandlerAPI interface {
 	Delete(w http.ResponseWriter, r *http.Request)
 
 	Onboarding(w http.ResponseWriter, r *http.Request)
+	Profile(w http.ResponseWriter, r *http.Request)
 }

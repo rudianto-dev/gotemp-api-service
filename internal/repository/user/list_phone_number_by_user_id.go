@@ -9,15 +9,16 @@ import (
 	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
-func (s *UserRepository) GetByID(ctx context.Context, ID string) (user *userDomain.User, err error) {
+func (s *UserRepository) ListPhoneNumberGetByUserID(ctx context.Context, UserID string) (users []*userDomain.PhoneNumber, err error) {
+	userEntities := []*userRepository.PhoneNumberEntity{}
 	sqlCommand := `
-		SELECT id, name, status, role_type, created_at, updated_at
+		SELECT id, user_id, phone_number, created_at, updated_at
 		FROM %s
-		WHERE id=:id
+		WHERE user_id=:user_id
 	`
-	sqlCommand = fmt.Sprintf(sqlCommand, sqlUserTable)
+	sqlCommand = fmt.Sprintf(sqlCommand, sqlUserPhoneNumberTable)
 	params := map[string]interface{}{
-		"id": ID,
+		"user_id": UserID,
 	}
 	rows, err := s.db.Read(ctx, sqlCommand, params)
 	if err != nil {
@@ -27,19 +28,16 @@ func (s *UserRepository) GetByID(ctx context.Context, ID string) (user *userDoma
 	}
 	defer rows.Close()
 
-	userEntity := userRepository.UserEntity{}
-	if rows.Next() {
-		err = rows.StructScan(&userEntity)
+	for rows.Next() {
+		phoneNumberEntity := userRepository.PhoneNumberEntity{}
+		err = rows.StructScan(&phoneNumberEntity)
 		if err != nil {
 			s.logger.ErrorWithContext(ctx, utils.ERROR_REPOSITORY_STAGE, err.Error())
 			err = utils.ErrQueryRead
 			return
 		}
+		userEntities = append(userEntities, &phoneNumberEntity)
 	}
-	if userEntity.ID == "" {
-		err = utils.ErrNotFound
-		return
-	}
-	user = userRepository.ToUserDomain(&userEntity)
+	users = userRepository.ToPhoneNumberDomains(userEntities)
 	return
 }
