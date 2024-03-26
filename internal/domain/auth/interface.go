@@ -5,10 +5,12 @@ import (
 	"net/http"
 
 	authContract "github.com/rudianto-dev/gotemp-api-service/internal/domain/auth/contract"
+	authDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/auth/model"
 	authRepository "github.com/rudianto-dev/gotemp-api-service/internal/domain/auth/repository"
 )
 
 type Repository interface {
+	Get(ctx context.Context, id string) (token *authDomain.Token, err error)
 	Save(ctx context.Context, req *authRepository.TokenEntity) error
 	Delete(ctx context.Context, id string) error
 }
@@ -19,6 +21,8 @@ type UseCase interface {
 	ResetPassword(ctx context.Context, req authContract.ResetPasswordRequest) (*authContract.ResetPasswordResponse, error)
 
 	Login(ctx context.Context, req authContract.LoginRequest) (*authContract.LoginResponse, error)
+	Logout(ctx context.Context, req authContract.LogoutRequest) (*authContract.LogoutResponse, error)
+	RefreshToken(ctx context.Context, req authContract.RefreshTokenRequest) (*authContract.RefreshTokenResponse, error)
 }
 
 type HandlerAPI interface {
@@ -27,4 +31,6 @@ type HandlerAPI interface {
 	ResetPassword(w http.ResponseWriter, r *http.Request)
 
 	Login(w http.ResponseWriter, r *http.Request)
+	Logout(w http.ResponseWriter, r *http.Request)
+	RefreshToken(w http.ResponseWriter, r *http.Request)
 }

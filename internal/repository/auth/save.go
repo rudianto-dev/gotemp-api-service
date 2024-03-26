@@ -11,7 +11,7 @@ func (s *TokenRepository) Save(ctx context.Context, req *authRepository.TokenEnt
 	err = s.cache.Save(ctx, req.Key, req.Payload, req.TTL)
 	if err != nil {
 		s.logger.ErrorWithContext(ctx, utils.ERROR_REPOSITORY_STAGE, err.Error())
-		err = utils.ErrRepositoryOTP
+		err = utils.ErrRepositoryAuth
 		return
 	}
 	return

@@ -35,10 +35,10 @@ func (m *Module) ExternalRoute() *chi.Mux {
 		router.Route("/auth", func(router chi.Router) {
 			router.Get("/account/{username}", authHandler.CheckAccount)
 			router.Post("/login", authHandler.Login)
+			router.Post("/refresh-token", authHandler.RefreshToken)
 			router.Group(func(router chi.Router) {
 				router.Use(middleware.GuardAuthenticated(middleware.TokenFromHeader))
-				router.Post("/logout", authHandler.CheckAccount)
-				router.Post("/refresh-token", authHandler.CheckAccount)
+				router.Post("/logout", authHandler.Logout)
 			})
 		})
 		router.Route("/password", func(router chi.Router) {

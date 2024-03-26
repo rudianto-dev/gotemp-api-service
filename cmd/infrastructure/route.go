@@ -25,6 +25,7 @@ func (srv *Service) CreateRouting() *chi.Mux {
 		chim.RealIP,
 		chim.Heartbeat("/ping"),
 		middleware.JWT(srv.JWT),
+		middleware.SetCache(srv.Cache),
 		// middleware.RequestLogger(srv.Config.NewLogrus()),
 	)
 

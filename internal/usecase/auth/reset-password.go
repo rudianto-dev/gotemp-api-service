@@ -7,7 +7,6 @@ import (
 	authDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/auth/model"
 	authType "github.com/rudianto-dev/gotemp-api-service/internal/domain/auth/model/type"
 	userType "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/model/type"
-	"github.com/rudianto-dev/gotemp-sdk/pkg/token"
 )
 
 func (s *AuthUseCase) ResetPassword(ctx context.Context, req authContract.ResetPasswordRequest) (res *authContract.ResetPasswordResponse, err error) {
@@ -34,13 +33,16 @@ func (s *AuthUseCase) ResetPassword(ctx context.Context, req authContract.ResetP
 	if err != nil {
 		return
 	}
-	token, expiredAt, err := s.jwt.Create(token.Payload{ID: user.ID, RoleType: int8(user.RoleType)})
+
+	newToken, err := s.GenerateToken(ctx, user)
 	if err != nil {
 		return
 	}
 	_ = s.otpRepository.DeleteVerification(ctx, req.OtpVerificationID)
 	res = &authContract.ResetPasswordResponse{
-		Token:     token,
-		ExpiredAt: expiredAt}
+		Token:          newToken.Value,
+		RefreshTokenID: newToken.ID,
+		ExpiredAt:      newToken.ExpiredAt,
+	}
 	return
 }

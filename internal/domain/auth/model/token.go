@@ -7,6 +7,7 @@ import (
 
 type Token struct {
 	ID        string
+	UserID    string
 	Value     string
 	ExpiredAt int64
 }
@@ -15,6 +16,7 @@ func NewToken(req authType.Token) (domain *Token) {
 	domain = &Token{
 		ID:        utils.GenerateUUID(),
 		Value:     req.Value,
+		UserID:    req.UserID,
 		ExpiredAt: req.ExpiredAt,
 	}
 	return
