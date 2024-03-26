@@ -11,10 +11,9 @@ type TokenRepository struct {
 	cache  *cache.DataSource
 }
 
-func NewAuthRepository(logger *logger.Logger, cache *cache.DataSource) (AuthInterface.Repository, error) {
-	TokenRepo := &TokenRepository{
+func NewAuthRepository(logger *logger.Logger, cache *cache.DataSource) AuthInterface.Repository {
+	return &TokenRepository{
 		logger: logger,
 		cache:  cache,
 	}
-	return TokenRepo, nil
 }

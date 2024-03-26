@@ -1,14 +1,17 @@
 package user
 
+import userType "github.com/rudianto-dev/gotemp-api-service/internal/domain/user/model/type"
+
 // USER USE-CASE
 type UserRequest struct {
 	Name string `json:"name" validate:"required"`
 }
 type UserResponse struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	UpdatedAt int64  `json:"updated_at"`
-	CreatedAt int64  `json:"created_at"`
+	ID        string            `json:"id"`
+	Name      string            `json:"name"`
+	RoleType  userType.RoleType `json:"role_type" validate:"required"`
+	UpdatedAt int64             `json:"updated_at"`
+	CreatedAt int64             `json:"created_at"`
 }
 
 type DetailRequest struct {
@@ -27,8 +30,9 @@ type ListResponse struct {
 }
 
 type CreateRequest struct {
-	Name     string `json:"name" validate:"required"`
-	Username string `json:"username" validate:"required"`
+	Name     string            `json:"name" validate:"required"`
+	Username string            `json:"username" validate:"required"`
+	RoleType userType.RoleType `json:"role_type" validate:"required"`
 }
 
 type CreateResponse struct {

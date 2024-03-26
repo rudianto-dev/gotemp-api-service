@@ -15,6 +15,7 @@ func (s *UserUseCase) Create(ctx context.Context, req userContract.CreateRequest
 		Name:     req.Name,
 		Username: req.Username,
 		Status:   userType.USER_STATUS_PREREGISTERED,
+		RoleType: req.RoleType,
 	})
 	if err != nil {
 		return
@@ -27,6 +28,7 @@ func (s *UserUseCase) Create(ctx context.Context, req userContract.CreateRequest
 	userResponse := userContract.UserResponse{
 		ID:        newUser.ID,
 		Name:      newUser.Name,
+		RoleType:  newUser.RoleType,
 		CreatedAt: newUser.CreatedAt,
 		UpdatedAt: newUser.UpdatedAt,
 	}

@@ -9,7 +9,7 @@ type UtilHandler struct {
 	logger logger.ILogger
 }
 
-func NewHandler(logger logger.ILogger) utilDomain.IHandlerAPI {
+func NewHandler(logger logger.ILogger) utilDomain.HandlerAPI {
 	return &UtilHandler{
 		logger: logger,
 	}

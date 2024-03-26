@@ -2,55 +2,44 @@ package module
 
 import (
 	"github.com/go-chi/chi"
-	authHandler "github.com/rudianto-dev/gotemp-api-service/internal/handler/api/auth"
-	otpHandler "github.com/rudianto-dev/gotemp-api-service/internal/handler/api/otp"
-	userHandler "github.com/rudianto-dev/gotemp-api-service/internal/handler/api/user"
-	utilHandler "github.com/rudianto-dev/gotemp-api-service/internal/handler/api/util"
-	authUseCase "github.com/rudianto-dev/gotemp-api-service/internal/usecase/auth"
-	otpUseCase "github.com/rudianto-dev/gotemp-api-service/internal/usecase/otp"
-	userUseCase "github.com/rudianto-dev/gotemp-api-service/internal/usecase/user"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/middleware"
 )
 
 func (m *Module) ExternalRoute() *chi.Mux {
-	authUseCase := authUseCase.NewUseCase(m.Infra.Logger, m.Infra.JWT, m.Infra.DB, m.AuthRepository, m.UserRepository, m.OTPRepository)
-	userUseCase := userUseCase.NewUseCase(m.Infra.Logger, m.Infra.DB, m.UserRepository)
-	otpUseCase := otpUseCase.NewUseCase(m.Infra.Logger, m.OTPRepository)
-
-	utilHandler := utilHandler.NewHandler(m.Infra.Logger)
-	authHandler := authHandler.NewHandler(m.Infra.Logger, authUseCase)
-	userHandler := userHandler.NewHandler(m.Infra.Logger, userUseCase)
-	otpHandler := otpHandler.NewHandler(m.Infra.Logger, otpUseCase)
-
 	router := chi.NewRouter()
 	router.Route("/v1", func(router chi.Router) {
-		router.Post("/health", utilHandler.GetHealthStatus)
+		// util section
+		router.Post("/health", m.UtilHandler.GetHealthStatus)
+		// user section
 		router.Route("/user", func(router chi.Router) {
-			router.Post("/onboarding", userHandler.Onboarding)
+			router.Post("/onboarding", m.UserHandler.Onboarding)
 			router.Group(func(router chi.Router) {
 				router.Use(middleware.GuardAuthenticated(middleware.TokenFromHeader))
-				router.Get("/profile", userHandler.Profile)
+				router.Get("/profile", m.UserHandler.Profile)
 			})
 		})
+		// auth section
 		router.Route("/auth", func(router chi.Router) {
-			router.Get("/account/{username}", authHandler.CheckAccount)
-			router.Post("/login", authHandler.Login)
-			router.Post("/refresh-token", authHandler.RefreshToken)
+			router.Get("/account/{username}", m.AuthHandler.CheckAccount)
+			router.Post("/refresh-token", m.AuthHandler.RefreshToken)
+			router.Post("/login", m.AuthHandler.Login)
 			router.Group(func(router chi.Router) {
 				router.Use(middleware.GuardAuthenticated(middleware.TokenFromHeader))
-				router.Post("/logout", authHandler.Logout)
+				router.Post("/logout", m.AuthHandler.Logout)
 			})
 		})
+		// password section
 		router.Route("/password", func(router chi.Router) {
+			router.Post("/reset", m.AuthHandler.ResetPassword)
 			router.Group(func(router chi.Router) {
 				router.Use(middleware.GuardAuthenticated(middleware.TokenFromHeader))
-				router.Post("/check", authHandler.CheckPassword)
+				router.Post("/check", m.AuthHandler.CheckPassword)
 			})
-			router.Post("/reset", authHandler.ResetPassword)
 		})
+		// otp section
 		router.Route("/otp", func(router chi.Router) {
-			router.Post("/send", otpHandler.SendOTP)
-			router.Post("/verify", otpHandler.VerifyOTP)
+			router.Post("/send", m.OTPHandler.SendOTP)
+			router.Post("/verify", m.OTPHandler.VerifyOTP)
 		})
 	})
 	return router

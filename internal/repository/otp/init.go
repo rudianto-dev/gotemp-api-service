@@ -11,10 +11,9 @@ type OTPRepository struct {
 	cache  *cache.DataSource
 }
 
-func NewOTPRepository(logger *logger.Logger, cache *cache.DataSource) (otpInterface.Repository, error) {
-	otpRepo := &OTPRepository{
+func NewOTPRepository(logger *logger.Logger, cache *cache.DataSource) otpInterface.Repository {
+	return &OTPRepository{
 		logger: logger,
 		cache:  cache,
 	}
-	return otpRepo, nil
 }

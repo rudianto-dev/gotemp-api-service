@@ -7,6 +7,6 @@ import (
 type IUseCase interface {
 }
 
-type IHandlerAPI interface {
+type HandlerAPI interface {
 	GetHealthStatus(w http.ResponseWriter, r *http.Request)
 }

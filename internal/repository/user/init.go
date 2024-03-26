@@ -19,10 +19,9 @@ const (
 	sqlUserCifTable            = "user_cif"
 )
 
-func NewUserRepository(logger *logger.Logger, db *database.DB) (userInterface.Repository, error) {
-	userRP := &UserRepository{
+func NewUserRepository(logger *logger.Logger, db *database.DB) userInterface.Repository {
+	return &UserRepository{
 		logger: logger,
 		db:     db,
 	}
-	return userRP, nil
 }
