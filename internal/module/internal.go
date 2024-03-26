@@ -14,6 +14,14 @@ func (m *Module) InternalRoute() *chi.Mux {
 			router.Put("/{id}", m.UserHandler.Update)
 			router.Delete("/{id}", m.UserHandler.Delete)
 		})
+
+		router.Route("/client", func(router chi.Router) {
+			router.Post("/list", m.ClientHandler.List)
+			router.Get("/{id}", m.ClientHandler.Detail)
+			router.Post("/", m.ClientHandler.Create)
+			router.Put("/{id}", m.ClientHandler.Update)
+			router.Delete("/{id}", m.ClientHandler.Delete)
+		})
 	})
 	return router
 }
