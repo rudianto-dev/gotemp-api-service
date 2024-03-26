@@ -1,7 +1,6 @@
 package module
 
 import (
-	"github.com/go-redis/redis"
 	"github.com/rudianto-dev/gotemp-api-service/cmd/configuration"
 	authInterface "github.com/rudianto-dev/gotemp-api-service/internal/domain/auth"
 	otpInterface "github.com/rudianto-dev/gotemp-api-service/internal/domain/otp"
@@ -9,6 +8,7 @@ import (
 	authRepository "github.com/rudianto-dev/gotemp-api-service/internal/repository/auth"
 	otpRepository "github.com/rudianto-dev/gotemp-api-service/internal/repository/otp"
 	userRepository "github.com/rudianto-dev/gotemp-api-service/internal/repository/user"
+	"github.com/rudianto-dev/gotemp-sdk/pkg/cache"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/database"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/logger"
 	"github.com/rudianto-dev/gotemp-sdk/pkg/token"
@@ -26,7 +26,7 @@ type Service struct {
 	Logger *logger.Logger
 	JWT    *token.JWT
 	DB     *database.DB
-	Redis  *redis.Client
+	Cache  *cache.DataSource
 }
 
 func NewModule(infra *Service) *Module {
@@ -34,11 +34,11 @@ func NewModule(infra *Service) *Module {
 	if err != nil {
 		infra.Logger.Panicf("error init user repository, %v", err)
 	}
-	authRepository, err := authRepository.NewAuthRepository(infra.Logger, infra.Redis)
+	authRepository, err := authRepository.NewAuthRepository(infra.Logger, infra.Cache)
 	if err != nil {
 		infra.Logger.Panicf("error init user repository, %v", err)
 	}
-	otpRepository, err := otpRepository.NewOTPRepository(infra.Logger, infra.Redis)
+	otpRepository, err := otpRepository.NewOTPRepository(infra.Logger, infra.Cache)
 	if err != nil {
 		infra.Logger.Panicf("error init user repository, %v", err)
 	}

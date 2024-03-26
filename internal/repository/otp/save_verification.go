@@ -8,7 +8,7 @@ import (
 )
 
 func (s *OTPRepository) SaveVerification(ctx context.Context, req *otpRepository.VerificationEntity) (err error) {
-	_, err = s.redis.Set(req.Key, req.Payload, req.TTL).Result()
+	err = s.cache.Save(ctx, req.Key, req.Payload, req.TTL)
 	if err != nil {
 		s.logger.ErrorWithContext(ctx, utils.ERROR_REPOSITORY_STAGE, err.Error())
 		err = utils.ErrRepositoryOTP

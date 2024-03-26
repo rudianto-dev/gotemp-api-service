@@ -8,7 +8,7 @@ import (
 )
 
 func (s *OTPRepository) Delete(ctx context.Context, receiver string) (err error) {
-	_, err = s.redis.Del(otpRepository.GetOTPKey(receiver)).Result()
+	err = s.cache.Delete(ctx, otpRepository.GetOTPKey(receiver))
 	if err != nil {
 		s.logger.ErrorWithContext(ctx, utils.ERROR_REPOSITORY_STAGE, err.Error())
 		err = utils.ErrRepositoryOTP

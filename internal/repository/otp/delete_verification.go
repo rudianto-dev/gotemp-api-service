@@ -8,7 +8,7 @@ import (
 )
 
 func (s *OTPRepository) DeleteVerification(ctx context.Context, verificationID string) (err error) {
-	_, err = s.redis.Del(otpRepository.GetVerificationKey(verificationID)).Result()
+	err = s.cache.Delete(ctx, otpRepository.GetVerificationKey(verificationID))
 	if err != nil {
 		s.logger.ErrorWithContext(ctx, utils.ERROR_REPOSITORY_STAGE, err.Error())
 		err = utils.ErrRepositoryOTP

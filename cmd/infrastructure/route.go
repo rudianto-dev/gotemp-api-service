@@ -12,7 +12,7 @@ func (srv *Service) CreateRouting() *chi.Mux {
 		Config: srv.Config,
 		Logger: srv.Logger,
 		DB:     srv.DB,
-		Redis:  srv.Redis,
+		Cache:  srv.Cache,
 		JWT:    srv.JWT,
 	})
 

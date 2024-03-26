@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"time"
+
 	"github.com/rudianto-dev/gotemp-sdk/pkg/gracefully"
 )
 
@@ -15,8 +16,8 @@ func (srv *Service) StopGracefully(server *http.Server) {
 			}
 			return nil
 		},
-		"redis": func() error {
-			if err := srv.Redis.Close(); err != nil {
+		"cache": func() error {
+			if err := srv.Cache.CloseConnection(); err != nil {
 				return err
 			}
 			return nil

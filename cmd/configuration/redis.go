@@ -1,16 +1,14 @@
 package configuration
 
 import (
-	"log"
 	"time"
 
 	"github.com/go-redis/redis"
 )
 
-func (cf ConfigurationSchema) NewRedis() *redis.Client {
+func (cf ConfigurationSchema) NewRedis() (config *redis.Options) {
 	defaultTimeout := 30 * time.Second
-
-	client := redis.NewClient(&redis.Options{
+	config = &redis.Options{
 		Addr:         cf.Redis.Address,
 		Password:     cf.Redis.Password,
 		DB:           cf.Redis.DB,
@@ -18,11 +16,6 @@ func (cf ConfigurationSchema) NewRedis() *redis.Client {
 		WriteTimeout: defaultTimeout,
 		ReadTimeout:  defaultTimeout,
 		MaxRetries:   cf.Redis.MaxRetry,
-	})
-
-	if _, err := client.Ping().Result(); err != nil {
-		log.Panic(err)
 	}
-
-	return client
+	return
 }
