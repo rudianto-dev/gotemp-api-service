@@ -9,4 +9,5 @@ type IUseCase interface {
 
 type HandlerAPI interface {
 	GetHealthStatus(w http.ResponseWriter, r *http.Request)
+	BuildRequest(w http.ResponseWriter, r *http.Request)
 }

@@ -5,7 +5,6 @@ import (
 	"time"
 
 	clientDomain "github.com/rudianto-dev/gotemp-api-service/internal/domain/client/model"
-	"github.com/spf13/cast"
 )
 
 const (
@@ -21,7 +20,7 @@ type CacheEntity struct {
 func ToCacheEntity(domain *clientDomain.Client) (entity *CacheEntity, err error) {
 	entity = &CacheEntity{
 		Key:     fmt.Sprintf(prefixOTP, domain.ClientID),
-		Payload: cast.ToString(domain.ClientSecret),
+		Payload: domain.ClientSecret,
 		TTL:     -1,
 	}
 	return

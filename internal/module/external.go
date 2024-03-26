@@ -10,9 +10,13 @@ func (m *Module) ExternalRoute() *chi.Mux {
 	router.Route("/v1", func(router chi.Router) {
 		// util section
 		router.Post("/health", m.UtilHandler.GetHealthStatus)
+		router.Post("/build", m.UtilHandler.BuildRequest)
 		// user section
 		router.Route("/user", func(router chi.Router) {
-			router.Post("/onboarding", m.UserHandler.Onboarding)
+			router.Group(func(router chi.Router) {
+				router.Use(middleware.ClientAuthenticated())
+				router.Post("/onboarding", m.UserHandler.Onboarding)
+			})
 			router.Group(func(router chi.Router) {
 				router.Use(middleware.GuardAuthenticated(middleware.TokenFromHeader))
 				router.Get("/profile", m.UserHandler.Profile)
