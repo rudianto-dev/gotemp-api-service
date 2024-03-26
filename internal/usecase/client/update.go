@@ -12,16 +12,28 @@ func (s *ClientUseCase) Update(ctx context.Context, req clientContract.UpdateReq
 	if err != nil {
 		return
 	}
+	oldClientID := updateClient.ClientID
 	updateClient.ClientID = req.ClientID
 	updateClient.ClientSecret = req.ClientSecret
 	updateClient.Status = req.Status
 	updateClient.ExpiredAt = req.ExpiredAt
 
-	userEntity := clientRepository.ToClientEntity(updateClient)
-	err = s.clientRepo.Update(ctx, nil, userEntity)
+	clientEntity := clientRepository.ToClientEntity(updateClient)
+	err = s.clientRepo.Update(ctx, nil, clientEntity)
 	if err != nil {
 		return
 	}
+
+	cache, err := clientRepository.ToCacheEntity(updateClient)
+	if err != nil {
+		return
+	}
+	_ = s.clientRepo.DeleteCache(ctx, oldClientID)
+	err = s.clientRepo.SaveCache(ctx, cache)
+	if err != nil {
+		return
+	}
+
 	clientResponse := clientContract.ClientResponse{
 		ID:           updateClient.ID,
 		ClientID:     updateClient.ClientID,

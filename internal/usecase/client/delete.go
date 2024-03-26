@@ -16,6 +16,9 @@ func (s *ClientUseCase) Delete(ctx context.Context, req clientContract.DeleteReq
 	if err != nil {
 		return
 	}
+
+	_ = s.clientRepo.DeleteCache(ctx, client.ClientID)
+
 	clientResponse := clientContract.ClientResponse{
 		ID:           client.ID,
 		ClientID:     client.ClientID,

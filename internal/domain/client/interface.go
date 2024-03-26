@@ -17,6 +17,10 @@ type Repository interface {
 	GetByID(ctx context.Context, id string) (*clientDomain.Client, error)
 	GetByClientID(ctx context.Context, clientID string) (*clientDomain.Client, error)
 	List(ctx context.Context) ([]*clientDomain.Client, error)
+
+	SaveCache(ctx context.Context, req *clientRepository.CacheEntity) error
+	GetCache(ctx context.Context, clientID string) (string, error)
+	DeleteCache(ctx context.Context, clientID string) error
 }
 
 type UseCase interface {
