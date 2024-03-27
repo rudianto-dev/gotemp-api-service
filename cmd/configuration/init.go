@@ -12,6 +12,7 @@ type ConfigurationSchema struct {
 	OTP      OTP      `json:"otp"`
 	Database Database `json:"database"`
 	Redis    Redis    `json:"redis"`
+	Alert    Alert    `json:"alert"`
 	Graceful Graceful `json:"graceful"`
 }
 
@@ -43,6 +44,16 @@ type Redis struct {
 	Password string `json:"password"`
 	DB       int    `json:"db"`
 	MaxRetry int    `json:"max_retry" mapstructure:"max_retry"`
+}
+
+type Alert struct {
+	Telegram Telegram `json:"telegram"`
+}
+
+type Telegram struct {
+	URL       string `json:"url"`
+	Token     string `json:"token"`
+	ChannelID string `json:"channel_id" mapstructure:"channel_id"`
 }
 
 type Graceful struct {

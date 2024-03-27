@@ -26,5 +26,12 @@
   },
   "graceful": {
     "timeout_in_second": 30
+  },
+  "alert": {
+    "telegram": {
+      "url": "https://api.telegram.org",
+      "token": "token",
+      "channel_id": "chanel-id"
+    }
   }
 }

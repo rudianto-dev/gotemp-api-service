@@ -14,6 +14,7 @@ import (
 	userHandler "github.com/rudianto-dev/gotemp-api-service/internal/handler/api/user"
 	utilHandler "github.com/rudianto-dev/gotemp-api-service/internal/handler/api/util"
 
+	alertRepository "github.com/rudianto-dev/gotemp-api-service/internal/repository/alert"
 	authRepository "github.com/rudianto-dev/gotemp-api-service/internal/repository/auth"
 	clientRepository "github.com/rudianto-dev/gotemp-api-service/internal/repository/client"
 	otpRepository "github.com/rudianto-dev/gotemp-api-service/internal/repository/otp"
@@ -48,6 +49,12 @@ type Service struct {
 
 func NewModule(infra *Service) *Module {
 	// init repository
+	telegram := &alertRepository.TelegramClient{
+		URL:       infra.Config.Alert.Telegram.URL,
+		Token:     infra.Config.Alert.Telegram.Token,
+		ChannelID: infra.Config.Alert.Telegram.ChannelID,
+	}
+	alertRepository := alertRepository.NewAlertRepository(infra.Logger, telegram)
 	userRepository := userRepository.NewUserRepository(infra.Logger, infra.DB)
 	authRepository := authRepository.NewAuthRepository(infra.Logger, infra.Cache)
 	otpRepository := otpRepository.NewOTPRepository(infra.Logger, infra.Cache)
@@ -55,7 +62,7 @@ func NewModule(infra *Service) *Module {
 	// init use-cases
 	authUseCase := authUseCase.NewUseCase(infra.Logger, infra.JWT, infra.DB, authRepository, userRepository, otpRepository)
 	userUseCase := userUseCase.NewUseCase(infra.Logger, infra.DB, userRepository)
-	otpUseCase := otpUseCase.NewUseCase(infra.Logger, otpRepository)
+	otpUseCase := otpUseCase.NewUseCase(infra.Logger, otpRepository, alertRepository)
 	clientUseCase := clientUseCase.NewUseCase(infra.Logger, infra.DB, clientRepository)
 	// init handler
 	module := &Module{
